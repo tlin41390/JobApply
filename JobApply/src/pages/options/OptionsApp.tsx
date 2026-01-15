@@ -1,25 +1,38 @@
 import { useEffect, useState } from "react";
 import { defaultProfile, validateProfile, type Profile } from "../../lib/schema";
-import { loadProfile, saveProfile } from "../../lib/storage";
-
 export function OptionsApp() {
     const [profile, setProfile] = useState<Profile>(defaultProfile);
     const [status, setStatus] = useState<string>("");
 
-    useEffect(() => {
-        loadProfile().then((p) => p && setProfile(p));
-    }, []);
-
     const errs = validateProfile(profile);
+
+
 
     async function onSave() {
         if (errs.length) {
             setStatus("Please Fix: " + errs.join(", "));
             return;
         }
-        await saveProfile(profile);
-        setStatus("Profile successfully saved");
-        console.log(profile);
+        try {
+            const response = await fetch('http://localhost:3000/api/save-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ profile }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setStatus(data.message || "Profile successfully saved");
+            } else {
+                setStatus("Error: " + data.error);
+            }
+        } catch(error){
+            setStatus("Failed to connect to server");
+            console.error(error);
+        }
     }
 
     return (
