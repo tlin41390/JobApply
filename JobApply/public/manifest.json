@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "JobApply",
+    "version": "1.0.0",
+    "description": "Auto-fill job applications with your profile",
+
+    "permissions": [
+        "storage"
+    ],
+
+    "options_page": "src/pages/options/index.html",
+
+    "background": {
+        "scripts": ["src/extension/background.ts"]
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["src/extension/content.ts"]
+        }
+    ]
+}
