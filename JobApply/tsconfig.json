@@ -12,6 +12,8 @@
       "compilerOptions": {
         "types": [
           "firefox-webext-browser"
-        ]
-      }
+        ],
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+,      }
     }
